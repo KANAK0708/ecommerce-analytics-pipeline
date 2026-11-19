@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.env
+.venv/
+venv/
+ENV/
+
+# PySpark & Data Warehousing
+metastore_db/
+derby.log
+spark-warehouse/
+*.parquet
+checkpoint/
+
+# Raw generated data (optional - commit schemas and generator, not massive raw data)
+# data/raw/*.csv
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Testing & Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# AWS & Secrets
+*.pem
+credentials

@@ -1,0 +1,99 @@
+// ==============================================================
+// Power BI DAX Measures Reference
+// Model: DirectQuery / Import via Amazon Athena ODBC Driver
+// Tables: gold_daily_sales, gold_inventory_health, gold_customer_metrics
+// ==============================================================
+
+// --------------------------------------------------------------
+// 1. SALES & REVENUE MEASURES (Table: gold_daily_sales)
+// --------------------------------------------------------------
+
+Total Revenue = 
+SUM('gold_daily_sales'[total_revenue])
+
+Total Orders = 
+SUM('gold_daily_sales'[total_orders])
+
+Average Order Value = 
+DIVIDE([Total Revenue], [Total Orders], 0)
+
+Monthly Revenue = 
+CALCULATE(
+    [Total Revenue],
+    DATESMTD('gold_daily_sales'[order_date])
+)
+
+Previous Month Revenue = 
+CALCULATE(
+    [Total Revenue],
+    PREVIOUSMONTH('gold_daily_sales'[order_date])
+)
+
+MoM Revenue Growth % = 
+VAR PrevRev = [Previous Month Revenue]
+VAR CurrentRev = [Total Revenue]
+RETURN
+    IF(
+        ISBLANK(PrevRev) || PrevRev == 0,
+        BLANK(),
+        DIVIDE(CurrentRev - PrevRev, PrevRev, 0)
+    )
+
+// --------------------------------------------------------------
+// 2. INVENTORY HEALTH MEASURES (Table: gold_inventory_health)
+// --------------------------------------------------------------
+
+Total SKUs = 
+COUNTROWS('gold_inventory_health')
+
+Total Stock on Hand = 
+SUM('gold_inventory_health'[current_stock])
+
+SKUs To Reorder = 
+CALCULATE(
+    COUNTROWS('gold_inventory_health'),
+    'gold_inventory_health'[reorder_flag] = 1
+)
+
+Out of Stock SKUs = 
+CALCULATE(
+    COUNTROWS('gold_inventory_health'),
+    'gold_inventory_health'[current_stock] <= 0
+)
+
+Stockout Risk % = 
+DIVIDE([SKUs To Reorder], [Total SKUs], 0)
+
+// --------------------------------------------------------------
+// 3. CUSTOMER ANALYTICS MEASURES (Table: gold_customer_metrics)
+// --------------------------------------------------------------
+
+Total Customers = 
+COUNTROWS('gold_customer_metrics')
+
+High Tier Customers = 
+CALCULATE(
+    COUNTROWS('gold_customer_metrics'),
+    'gold_customer_metrics'[clv_tier] = "High"
+)
+
+Medium Tier Customers = 
+CALCULATE(
+    COUNTROWS('gold_customer_metrics'),
+    'gold_customer_metrics'[clv_tier] = "Medium"
+)
+
+Low Tier Customers = 
+CALCULATE(
+    COUNTROWS('gold_customer_metrics'),
+    'gold_customer_metrics'[clv_tier] = "Low"
+)
+
+Repeat Customers = 
+CALCULATE(
+    COUNTROWS('gold_customer_metrics'),
+    'gold_customer_metrics'[total_orders] > 1
+)
+
+Repeat Customer Rate % = 
+DIVIDE([Repeat Customers], [Total Customers], 0)

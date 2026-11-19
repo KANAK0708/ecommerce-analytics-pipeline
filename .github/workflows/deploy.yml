@@ -1,0 +1,53 @@
+name: CI/CD Pipeline - E-Commerce Analytics ETL
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run Unit & Chispa Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Pytest & Chispa DataFrame Tests
+        run: |
+          pytest tests/ -v --cov=src --cov-report=term-missing
+
+  deploy:
+    name: Deploy Glue Scripts & Lambda Assets
+    needs: test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION || 'us-east-1' }}
+
+      - name: Sync ETL Scripts to S3 Scripts Location
+        run: |
+          aws s3 cp src/etl/ s3://${{ secrets.S3_BUCKET_NAME }}/scripts/etl/ --recursive
+          aws s3 cp src/utils/ s3://${{ secrets.S3_BUCKET_NAME }}/scripts/utils/ --recursive

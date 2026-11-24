@@ -15,7 +15,7 @@
 - [ ] TASK-5.3: Reconcile Power BI numbers with Athena SQL query output
 
 ## In Progress
-*(No tasks currently in progress — Phase 1 completed, ready for Phase 2 initiation)*
+- [ ] TASK-1.7: Phase 1 Final Sign-Off (`Human`) — *Pending personal human confirmation*
 
 ## Done (Phase 1: Local Development & Synthetic Data Engine)
 - [x] TASK-1.0: Local Python 3.11 Virtual Environment & Dependency Setup (`Human`) — *Completed 2026-11-23*
@@ -25,4 +25,3 @@
 - [x] TASK-1.4: Edge-Case Anomaly Distribution & Foreign Key Tests (`Codex`) — *Completed 2026-11-24*
 - [x] TASK-1.5: Independent Code Review of Generator (`Codex`) — *Completed 2026-11-24*
 - [x] TASK-1.6: Phase 1 Integration Dry-Run, Verification & Regression Suite (`Antigravity`) — *Completed 2026-11-24*
-- [x] TASK-1.7: Phase 1 Sign-Off Completed (Subject to final human confirmation) — *Completed 2026-11-24*

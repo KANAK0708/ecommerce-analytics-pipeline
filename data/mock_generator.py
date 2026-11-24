@@ -405,10 +405,12 @@ def save_csv(rows, header, path):
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description="Generate Phase 1 mock e-commerce CSV files.")
-    parser.add_argument("--customers", type=int, default=1000, help="unique customers (default 1000)")
-    parser.add_argument("--products", type=int, default=300, help="catalog products (default 300)")
+    parser.add_argument("--customers", type=int, default=1000,
+                        help="unique customers, range: 25-89999 (default: 1000)")
+    parser.add_argument("--products", type=int, default=300,
+                        help="catalog products, range: 7-300 (default: 300)")
     parser.add_argument("--orders", type=int, default=10000,
-                        help="total order line rows incl. duplicates (default 10000)")
+                        help="total order line rows incl. duplicates, range: 400-500000 (default: 10000)")
     parser.add_argument("--seed", type=int, default=42, help="random seed (default 42)")
     parser.add_argument("--reference-date", default=DEFAULT_REFERENCE_DATE,
                         help="anchor date YYYY-MM-DD (default 2026-11-19)")

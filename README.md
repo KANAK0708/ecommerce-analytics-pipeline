@@ -7,7 +7,7 @@ A production-grade cloud analytics data engineering pipeline adhering to the **M
 ## Architecture Overview
 
 ```
-[Faker Mock Generator]
+[Deterministic Synthetic Data Generator]
         │ (CSV Upload)
         ▼
 [Amazon S3: Bronze Layer] ──(S3 Event: ObjectCreated)──> [AWS Lambda Handler]

@@ -4,7 +4,7 @@
 **Phase**: Phase 1 (Local Setup & Synthetic Data Engine)  
 **Status**: Formal Specification (Approved by Project Owner)  
 **Task Reference**: `TASK-1.1`  
-**Last Updated**: 2026-11-19  
+**Last Updated**: 2026-11-24  
 
 ---
 
@@ -15,9 +15,9 @@ The synthetic data generator [data/mock_generator.py](file:///d:/E-commerce/data
 
 | Argument | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `--customers` | `int` | `1000` | Number of **unique** customer entities to generate. |
-| `--products` | `int` | `300` | Number of catalog products to generate. |
-| `--orders` | `int` | `10000` | Total order line-item rows to generate (including multi-item lines and duplicates). |
+| `--customers` | `int` | `1000` | Number of **unique** customer entities to generate (allowed range: `25` to `89999`). |
+| `--products` | `int` | `300` | Number of catalog products to generate (allowed range: `7` to `300`). |
+| `--orders` | `int` | `10000` | Total order line-item rows to generate (allowed range: `400` to `500000`). |
 | `--seed` | `int` | `42` | Random generator seed for bit-exact reproducibility. |
 | `--reference-date` | `str` | `"2026-11-19"` | ISO-8601 anchor date (`YYYY-MM-DD`) for relative date generation. |
 | `--clean` | `flag` | `False` | **Strict File Deletion Safety**: Deletes *only* `customers.csv`, `inventory.csv`, and `orders.csv` from the output directory. Never deletes other files; never uses wildcards. If omitted, target files are safely overwritten in place. |
@@ -41,6 +41,8 @@ The synthetic data generator [data/mock_generator.py](file:///d:/E-commerce/data
 To strictly preserve the approved TRD layout (where `inventory.csv` does not contain `unit_price`), product pricing is decoupled into a canonical catalog interface that is independently testable without altering `inventory.csv`.
 
 ### 2.1 Interface Definition
+The canonical product catalog is dynamically generated using the run's `--seed` parameter (default `42`), guaranteeing that any run with the same seed will produce the exact same product prices across both inventory and orders.
+
 ```python
 def get_canonical_product_catalog(seed: int = 42) -> dict[str, float]:
     """
@@ -57,7 +59,7 @@ def get_canonical_product_catalog(seed: int = 42) -> dict[str, float]:
 ### 2.2 Independent Testability Contract
 `Codex` will independently test the pricing interface in `tests/test_mock_generator.py`:
 1. Assert catalog size is exactly 300 entries.
-2. Assert keys match regex `^PROD_1[0-2][0-9]{2}|PROD_1300$`.
+2. Assert keys match regex `^PROD_(?:1[0-2][0-9]{2}|1300)$`.
 3. Assert all prices fall within `5.99 <= price <= 499.99`.
 4. Assert all prices have at most 2 decimal places.
 5. Assert price consistency: For every row in `orders.csv` where `unit_price > 0.0`, `orders.unit_price == catalog[orders.product_id]`.
@@ -127,6 +129,7 @@ def get_canonical_product_catalog(seed: int = 42) -> dict[str, float]:
     * Total distinct orders = $5,040 + 1,620 + 540 = \mathbf{7,200}$ distinct `order_id` values.
     * Average lines per order = $9,900 / 7,200 = 1.375$ lines.
     * Plus $100$ duplicate line replays = $\mathbf{10,000}$ total lines in `orders.csv`.
+* **Date Relationship Note**: `order_date` is sampled independently within `[ref_date - 180 days, ref_date]` and is **not** currently constrained to be on or after `customers.signup_date`. Downstream Phase 2 transformations and analytics must **not** assume `order_date >= signup_date`.
 * **File Header**: `order_id,customer_id,order_date,product_id,quantity,unit_price`
 
 #### Field Specifications

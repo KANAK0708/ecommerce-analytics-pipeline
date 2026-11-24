@@ -114,10 +114,19 @@ def get_canonical_product_catalog(seed: int = 42) -> dict[str, float]:
 
 * **Volume**: Exactly **10,000 order line-item data rows**.
 * **Natural / Composite Key**: `(order_id, product_id)`.
-* **Line Item Composition**:
+* **Line Item Composition & Approved Multi-Item Distribution**:
   * **9,900 Unique Source Lines**: Unique composite pairs of `(order_id, product_id)`.
   * **100 Duplicate Line Replays**: Exact row replays of 100 unique lines chosen from Data Rows 301–10,000.
-  * **Legitimate Multi-Item Orders**: ~30% of distinct orders contain 2 to 3 lines sharing the same `order_id` and `customer_id` with **different** `product_id` values.
+  * **Approved Multi-Item Order Distribution**:
+    * Exactly **30%** of distinct orders are multi-item orders ($2,160$ multi-item orders out of $7,200$ total distinct orders).
+    * Out of those multi-item orders, exactly **75% are two-line orders** and **25% are three-line orders**:
+      * **Single-line orders (70.0%)**: $5,040$ orders $\times 1$ line = $5,040$ lines.
+      * **Two-line orders (22.5%)**: $1,620$ orders $\times 2$ lines = $3,240$ lines ($75\%$ of multi-item orders).
+      * **Three-line orders (7.5%)**: $540$ orders $\times 3$ lines = $1,620$ lines ($25\%$ of multi-item orders).
+    * Total unique lines = $5,040 + 3,240 + 1,620 = \mathbf{9,900}$ lines.
+    * Total distinct orders = $5,040 + 1,620 + 540 = \mathbf{7,200}$ distinct `order_id` values.
+    * Average lines per order = $9,900 / 7,200 = 1.375$ lines.
+    * Plus $100$ duplicate line replays = $\mathbf{10,000}$ total lines in `orders.csv`.
 * **File Header**: `order_id,customer_id,order_date,product_id,quantity,unit_price`
 
 #### Field Specifications

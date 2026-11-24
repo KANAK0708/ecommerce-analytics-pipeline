@@ -1,0 +1,301 @@
+product_id,product_name,category,current_stock,reorder_threshold
+PROD_1001,Wireless Guidebook,Books,-8,75
+PROD_1002,Eco Biography,Books,-3,75
+PROD_1003,Compact T-Shirt,Apparel,-3,25
+PROD_1004,,Books,50,75
+PROD_1005,,Health & Personal Care,431,100
+PROD_1006,,Home & Kitchen,11,25
+PROD_1007,Smart Vitamins,Health & Personal Care,110,10
+PROD_1008,Nordic Lotion,Health & Personal Care,464,100
+PROD_1009,Nordic Shaver,Health & Personal Care,418,10
+PROD_1010,Active Blender,Home & Kitchen,10,25
+PROD_1011,Everyday Coffee Maker,Home & Kitchen,369,75
+PROD_1012,Deluxe Tablet,Electronics,97,75
+PROD_1013,Everyday Water Bottle,Sports & Outdoors,42,50
+PROD_1014,Active Blender 2,Home & Kitchen,6,50
+PROD_1015,Compact Massager,Health & Personal Care,322,20
+PROD_1016,Vintage Jump Rope,Sports & Outdoors,422,20
+PROD_1017,Pro Blender,Home & Kitchen,219,75
+PROD_1018,Eco Journal,Books,74,100
+PROD_1019,Compact Sneakers,Apparel,192,50
+PROD_1020,Premium Dumbbells,Sports & Outdoors,11,20
+PROD_1021,Wireless Coffee Maker,Home & Kitchen,158,20
+PROD_1022,Portable Jump Rope,Sports & Outdoors,0,50
+PROD_1023,Wireless Monitor,Electronics,289,100
+PROD_1024,Nordic Vitamins,Health & Personal Care,0,75
+PROD_1025,Ultra Trekking Poles,Sports & Outdoors,284,100
+PROD_1026,Wireless Keyboard,Electronics,304,50
+PROD_1027,Urban Jeans,Apparel,92,25
+PROD_1028,Nordic Journal,Books,124,100
+PROD_1029,Everyday Headphones,Electronics,91,10
+PROD_1030,Everyday Toothbrush,Health & Personal Care,45,50
+PROD_1031,Active Cookware Set,Home & Kitchen,0,25
+PROD_1032,Deluxe Hoodie,Apparel,358,25
+PROD_1033,Smart Rug,Home & Kitchen,90,100
+PROD_1034,Portable Kettle,Home & Kitchen,0,100
+PROD_1035,Nordic Kettle,Home & Kitchen,286,20
+PROD_1036,Everyday Yoga Mat,Sports & Outdoors,429,10
+PROD_1037,Portable Charger,Electronics,0,50
+PROD_1038,Ultra Hair Dryer,Health & Personal Care,5,10
+PROD_1039,Wireless Cookware Set,Home & Kitchen,174,100
+PROD_1040,Classic Charger,Electronics,160,50
+PROD_1041,Premium Jump Rope,Sports & Outdoors,187,75
+PROD_1042,Compact Charger,Electronics,207,10
+PROD_1043,Portable Scarf,Apparel,3,20
+PROD_1044,Active Blender 3,Home & Kitchen,206,100
+PROD_1045,Pro Guidebook,Books,427,25
+PROD_1046,Nordic Rug,Home & Kitchen,10,10
+PROD_1047,Classic Tablet,Electronics,19,25
+PROD_1048,Vintage Shaver,Health & Personal Care,445,50
+PROD_1049,Classic Speaker,Electronics,1,10
+PROD_1050,Wireless Monitor 2,Electronics,493,100
+PROD_1051,Portable Lotion,Health & Personal Care,286,10
+PROD_1052,Premium Biography,Books,9,10
+PROD_1053,Premium Lamp,Home & Kitchen,441,50
+PROD_1054,Ultra Bike Helmet,Sports & Outdoors,223,100
+PROD_1055,Essential Speaker,Electronics,40,50
+PROD_1056,Smart Biography,Books,480,100
+PROD_1057,Compact Blender,Home & Kitchen,2,100
+PROD_1058,Nordic Lamp,Home & Kitchen,497,75
+PROD_1059,Deluxe Dumbbells,Sports & Outdoors,25,25
+PROD_1060,Compact Jacket,Apparel,165,25
+PROD_1061,Ultra Biography,Books,422,100
+PROD_1062,Nordic Router,Electronics,331,75
+PROD_1063,Eco Journal 2,Books,4,20
+PROD_1064,Compact Workbook,Books,123,100
+PROD_1065,Essential Headphones,Electronics,127,50
+PROD_1066,Smart Rug 2,Home & Kitchen,14,20
+PROD_1067,Urban Bike Helmet,Sports & Outdoors,72,10
+PROD_1068,Smart Atlas,Books,44,20
+PROD_1069,Ultra Diffuser,Health & Personal Care,185,25
+PROD_1070,Ultra Cap,Apparel,160,10
+PROD_1071,Active Workbook,Books,303,50
+PROD_1072,Essential Cookware Set,Home & Kitchen,23,10
+PROD_1073,Vintage Blender,Home & Kitchen,0,25
+PROD_1074,Wireless Bike Helmet,Sports & Outdoors,4,10
+PROD_1075,Nordic Toothbrush,Health & Personal Care,68,20
+PROD_1076,Essential Camera,Electronics,335,100
+PROD_1077,Ultra Tent,Sports & Outdoors,51,75
+PROD_1078,Smart Camera,Electronics,222,100
+PROD_1079,Deluxe Scarf,Apparel,427,50
+PROD_1080,Urban Cap,Apparel,7,25
+PROD_1081,Compact Cookware Set,Home & Kitchen,8,10
+PROD_1082,Portable Hoodie,Apparel,470,75
+PROD_1083,Everyday Toaster,Home & Kitchen,8,50
+PROD_1084,Eco Monitor,Electronics,121,100
+PROD_1085,Urban Cookware Set,Home & Kitchen,193,10
+PROD_1086,Smart Scale,Health & Personal Care,115,25
+PROD_1087,Wireless Router,Electronics,203,75
+PROD_1088,Everyday Speaker,Electronics,2,20
+PROD_1089,Premium Knife Block,Home & Kitchen,373,50
+PROD_1090,Ultra Bike Helmet 2,Sports & Outdoors,0,10
+PROD_1091,Pro Router,Electronics,0,20
+PROD_1092,Compact Jacket 2,Apparel,0,50
+PROD_1093,Portable Guidebook,Books,0,50
+PROD_1094,Portable Dumbbells,Sports & Outdoors,6,25
+PROD_1095,Deluxe Cap,Apparel,0,20
+PROD_1096,Essential Biography,Books,332,50
+PROD_1097,Smart Hair Dryer,Health & Personal Care,240,25
+PROD_1098,Essential Blender,Home & Kitchen,234,50
+PROD_1099,Nordic Vitamins 2,Health & Personal Care,274,75
+PROD_1100,Eco Jacket,Apparel,41,25
+PROD_1101,Smart Cap,Apparel,375,75
+PROD_1102,Eco Kettle,Home & Kitchen,157,20
+PROD_1103,Smart Workbook,Books,484,75
+PROD_1104,Vintage Shaver 2,Health & Personal Care,11,20
+PROD_1105,Vintage Yoga Mat,Sports & Outdoors,391,100
+PROD_1106,Premium Workbook,Books,140,50
+PROD_1107,Smart Hair Dryer 2,Health & Personal Care,4,10
+PROD_1108,Nordic Headphones,Electronics,129,25
+PROD_1109,Urban Cookware Set 2,Home & Kitchen,0,25
+PROD_1110,Premium Kettle,Home & Kitchen,113,75
+PROD_1111,Wireless Hoodie,Apparel,5,25
+PROD_1112,Portable Coffee Maker,Home & Kitchen,91,100
+PROD_1113,Vintage Workbook,Books,190,100
+PROD_1114,Active Scale,Health & Personal Care,1,20
+PROD_1115,Wireless Yoga Mat,Sports & Outdoors,492,20
+PROD_1116,Essential Novel,Books,48,50
+PROD_1117,Essential Tablet,Electronics,3,25
+PROD_1118,Urban Trekking Poles,Sports & Outdoors,4,10
+PROD_1119,Ultra Sleeping Bag,Sports & Outdoors,394,25
+PROD_1120,Smart Camera 2,Electronics,136,50
+PROD_1121,Nordic Lotion 2,Health & Personal Care,77,25
+PROD_1122,Essential Shaver,Health & Personal Care,0,50
+PROD_1123,Active Headphones,Electronics,4,25
+PROD_1124,Urban Charger,Electronics,5,50
+PROD_1125,Ultra Journal,Books,323,75
+PROD_1126,Classic Jump Rope,Sports & Outdoors,56,100
+PROD_1127,Smart Kettle,Home & Kitchen,7,25
+PROD_1128,Deluxe Scale,Health & Personal Care,2,25
+PROD_1129,Nordic Shaver 2,Health & Personal Care,229,10
+PROD_1130,Active Router,Electronics,0,20
+PROD_1131,Eco Toaster,Home & Kitchen,70,10
+PROD_1132,Wireless Cap,Apparel,186,50
+PROD_1133,Wireless Charger,Electronics,215,25
+PROD_1134,Everyday Blender,Home & Kitchen,160,25
+PROD_1135,Deluxe Blender,Home & Kitchen,362,20
+PROD_1136,Ultra Tablet,Electronics,463,75
+PROD_1137,Essential Cookbook,Books,265,50
+PROD_1138,Nordic Workbook,Books,26,50
+PROD_1139,Smart Dumbbells,Sports & Outdoors,240,10
+PROD_1140,Eco Knife Block,Home & Kitchen,14,20
+PROD_1141,Portable Keyboard,Electronics,77,100
+PROD_1142,Urban Hoodie,Apparel,214,10
+PROD_1143,Urban Biography,Books,82,75
+PROD_1144,Portable Tent,Sports & Outdoors,37,50
+PROD_1145,Compact Novel,Books,478,75
+PROD_1146,Vintage Backpack,Apparel,274,25
+PROD_1147,Nordic Cookbook,Books,5,20
+PROD_1148,Wireless Cookbook,Books,220,50
+PROD_1149,Essential Yoga Mat,Sports & Outdoors,238,100
+PROD_1150,Classic Scarf,Apparel,16,25
+PROD_1151,Compact Water Bottle,Sports & Outdoors,15,20
+PROD_1152,Deluxe Backpack,Apparel,172,75
+PROD_1153,Pro Lotion,Health & Personal Care,365,100
+PROD_1154,Smart Sneakers,Apparel,9,10
+PROD_1155,Premium Toothbrush,Health & Personal Care,7,20
+PROD_1156,Essential Headphones 2,Electronics,0,50
+PROD_1157,Pro Jeans,Apparel,284,25
+PROD_1158,Compact Toothbrush,Health & Personal Care,325,20
+PROD_1159,Eco Diffuser 2,Health & Personal Care,252,75
+PROD_1160,Deluxe Kettle,Home & Kitchen,0,25
+PROD_1161,Eco Keyboard,Electronics,367,20
+PROD_1162,Deluxe Rug,Home & Kitchen,0,75
+PROD_1163,Classic Trekking Poles,Sports & Outdoors,328,20
+PROD_1164,Essential Monitor,Electronics,232,75
+PROD_1165,Deluxe Jump Rope,Sports & Outdoors,286,50
+PROD_1166,Pro Cap,Apparel,448,25
+PROD_1167,Wireless Novel,Books,350,10
+PROD_1168,Active Jeans,Apparel,9,100
+PROD_1169,Deluxe Scarf 2,Apparel,23,25
+PROD_1170,Active Water Bottle,Sports & Outdoors,144,20
+PROD_1171,Wireless Tablet,Electronics,4,100
+PROD_1172,Nordic Bike Helmet,Sports & Outdoors,233,25
+PROD_1173,Smart Massager,Health & Personal Care,139,25
+PROD_1174,Nordic Sleeping Bag,Sports & Outdoors,22,75
+PROD_1175,Eco Bike Helmet,Sports & Outdoors,390,10
+PROD_1176,Eco Scarf,Apparel,0,100
+PROD_1177,Essential Jeans,Apparel,220,50
+PROD_1178,Deluxe Jeans,Apparel,291,50
+PROD_1179,Ultra Router,Electronics,465,20
+PROD_1180,Wireless Bike Helmet 2,Sports & Outdoors,0,50
+PROD_1181,Premium Knife Block 2,Home & Kitchen,317,25
+PROD_1182,Premium Vitamins,Health & Personal Care,11,100
+PROD_1183,Urban Shaver,Health & Personal Care,28,25
+PROD_1184,Deluxe Massager,Health & Personal Care,102,20
+PROD_1185,Ultra Shaver,Health & Personal Care,295,75
+PROD_1186,Portable Diffuser,Health & Personal Care,0,50
+PROD_1187,Pro Journal,Books,398,10
+PROD_1188,Pro Cookbook,Books,0,100
+PROD_1189,Essential Water Bottle,Sports & Outdoors,260,100
+PROD_1190,Compact Rug,Home & Kitchen,161,75
+PROD_1191,Smart Monitor,Electronics,292,25
+PROD_1192,Urban Guidebook,Books,276,100
+PROD_1193,Vintage Massager,Health & Personal Care,491,20
+PROD_1194,Classic Massager,Health & Personal Care,88,20
+PROD_1195,Classic Cookware Set,Home & Kitchen,344,10
+PROD_1196,Wireless Monitor 3,Electronics,380,75
+PROD_1197,Compact Headphones,Electronics,224,10
+PROD_1198,Wireless Hair Dryer,Health & Personal Care,20,75
+PROD_1199,Classic Toaster,Home & Kitchen,390,50
+PROD_1200,Deluxe Atlas,Books,104,50
+PROD_1201,Compact Biography,Books,265,10
+PROD_1202,Pro Toaster,Home & Kitchen,259,75
+PROD_1203,Portable Bike Helmet,Sports & Outdoors,0,20
+PROD_1204,Pro Diffuser,Health & Personal Care,1,25
+PROD_1205,Ultra Tent 2,Sports & Outdoors,152,75
+PROD_1206,Ultra Speaker,Electronics,259,25
+PROD_1207,Deluxe Cap 2,Apparel,0,10
+PROD_1208,Smart Toaster,Home & Kitchen,186,25
+PROD_1209,Compact Hair Dryer,Health & Personal Care,0,10
+PROD_1210,Eco Lamp,Home & Kitchen,344,25
+PROD_1211,Ultra Scarf,Apparel,13,25
+PROD_1212,Everyday Scale,Health & Personal Care,295,50
+PROD_1213,Eco Hair Dryer,Health & Personal Care,51,20
+PROD_1214,Compact Rug 2,Home & Kitchen,367,75
+PROD_1215,Everyday Dumbbells,Sports & Outdoors,259,75
+PROD_1216,Classic Atlas,Books,108,50
+PROD_1217,Everyday Toothbrush 2,Health & Personal Care,6,10
+PROD_1218,Essential Tablet 2,Electronics,434,75
+PROD_1219,Compact Guidebook,Books,347,100
+PROD_1220,Wireless Sneakers,Apparel,389,75
+PROD_1221,Classic Charger 2,Electronics,329,75
+PROD_1222,Ultra Coffee Maker,Home & Kitchen,9,25
+PROD_1223,Essential Camera 2,Electronics,91,50
+PROD_1224,Everyday Diffuser,Health & Personal Care,239,10
+PROD_1225,Compact Cap,Apparel,153,100
+PROD_1226,Portable Toothbrush,Health & Personal Care,498,75
+PROD_1227,Active Keyboard,Electronics,275,100
+PROD_1228,Smart T-Shirt,Apparel,50,50
+PROD_1229,Nordic Journal 2,Books,150,100
+PROD_1230,Essential Yoga Mat 2,Sports & Outdoors,350,25
+PROD_1231,Vintage Hoodie,Apparel,263,10
+PROD_1232,Portable Kettle 2,Home & Kitchen,122,25
+PROD_1233,Wireless Keyboard 2,Electronics,148,50
+PROD_1234,Urban Tent,Sports & Outdoors,0,50
+PROD_1235,Compact Trekking Poles,Sports & Outdoors,309,50
+PROD_1236,Nordic Blender,Home & Kitchen,359,75
+PROD_1237,Nordic Shaver 3,Health & Personal Care,475,100
+PROD_1238,Compact Rug 3,Home & Kitchen,265,100
+PROD_1239,Wireless Guidebook 3,Books,466,75
+PROD_1240,Deluxe Rug 2,Home & Kitchen,257,25
+PROD_1241,Premium Rug,Home & Kitchen,459,75
+PROD_1242,Active Journal,Books,384,100
+PROD_1243,Pro Water Bottle,Sports & Outdoors,169,20
+PROD_1244,Vintage Dumbbells,Sports & Outdoors,192,100
+PROD_1245,Urban Novel,Books,324,25
+PROD_1246,Portable Biography,Books,318,50
+PROD_1247,Classic Camera,Electronics,0,20
+PROD_1248,Pro Monitor,Electronics,370,20
+PROD_1249,Premium Jacket,Apparel,205,100
+PROD_1250,Smart Journal,Books,44,50
+PROD_1251,Essential Jump Rope,Sports & Outdoors,428,20
+PROD_1252,Active Yoga Mat,Sports & Outdoors,454,50
+PROD_1253,Urban Yoga Mat,Sports & Outdoors,114,10
+PROD_1254,Everyday Workbook,Books,432,100
+PROD_1255,Pro T-Shirt,Apparel,375,25
+PROD_1256,Eco Charger,Electronics,294,100
+PROD_1257,Portable Monitor,Electronics,21,75
+PROD_1258,Deluxe Cookbook,Books,105,25
+PROD_1259,Premium Tablet,Electronics,0,75
+PROD_1260,Active Trekking Poles,Sports & Outdoors,113,75
+PROD_1261,Urban Water Bottle,Sports & Outdoors,423,20
+PROD_1262,Eco Guidebook,Books,123,75
+PROD_1263,Essential T-Shirt,Apparel,47,100
+PROD_1264,Pro Cap 2,Apparel,408,75
+PROD_1265,Compact Tablet,Electronics,42,50
+PROD_1266,Essential Cookbook 2,Books,296,100
+PROD_1267,Wireless Monitor 4,Electronics,88,75
+PROD_1268,Vintage Anthology,Books,0,50
+PROD_1269,Pro Sleeping Bag,Sports & Outdoors,0,75
+PROD_1270,Eco Headphones,Electronics,0,100
+PROD_1271,Pro Jump Rope,Sports & Outdoors,7,10
+PROD_1272,Ultra Dumbbells,Sports & Outdoors,180,10
+PROD_1273,Ultra Speaker 2,Electronics,5,10
+PROD_1274,Ultra Workbook,Books,256,25
+PROD_1275,Wireless Jump Rope,Sports & Outdoors,0,25
+PROD_1276,Compact Yoga Mat,Sports & Outdoors,133,100
+PROD_1277,Smart Tent,Sports & Outdoors,80,25
+PROD_1278,Active Hoodie,Apparel,250,25
+PROD_1279,Wireless Toothbrush,Health & Personal Care,15,50
+PROD_1280,Wireless Toaster,Home & Kitchen,87,100
+PROD_1281,Vintage Yoga Mat 2,Sports & Outdoors,148,75
+PROD_1282,Smart Headphones,Electronics,351,75
+PROD_1283,Ultra Biography 2,Books,483,20
+PROD_1284,Vintage Water Bottle,Sports & Outdoors,486,50
+PROD_1285,Premium Atlas,Books,9,20
+PROD_1286,Compact Cookware Set 2,Home & Kitchen,128,100
+PROD_1287,Everyday Novel,Books,154,25
+PROD_1288,Pro Router 2,Electronics,369,25
+PROD_1289,Essential Tent,Sports & Outdoors,486,25
+PROD_1290,Urban Coffee Maker,Home & Kitchen,43,50
+PROD_1291,Premium Scarf,Apparel,112,25
+PROD_1292,Urban Keyboard,Electronics,349,20
+PROD_1293,Deluxe Vitamins,Health & Personal Care,190,20
+PROD_1294,Everyday Diffuser 2,Health & Personal Care,275,25
+PROD_1295,Compact Atlas,Books,244,100
+PROD_1296,Pro Toaster 2,Home & Kitchen,140,100
+PROD_1297,Ultra Yoga Mat,Sports & Outdoors,492,75
+PROD_1298,Wireless Workbook,Books,289,10
+PROD_1299,Nordic Atlas,Books,482,25
+PROD_1300,Active Atlas,Books,97,50

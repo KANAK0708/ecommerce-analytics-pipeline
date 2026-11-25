@@ -4,7 +4,7 @@
 **Phase**: Phase 1 (Local Setup & Synthetic Data Engine)  
 **Status**: Formal Specification (Approved by Project Owner)  
 **Task Reference**: `TASK-1.1`  
-**Last Updated**: 2026-11-24  
+**Last Updated**: 2026-11-25  
 
 ---
 
@@ -135,7 +135,7 @@ def get_canonical_product_catalog(seed: int = 42) -> dict[str, float]:
 #### Field Specifications
 | Field Name | Type | Constraints | Nullable | Allowed Values & Business Rules |
 | :--- | :--- | :--- | :--- | :--- |
-| `order_id` | `STRING` | `^ORD_[0-9]{6}$` | No | Grouping key for orders (~7,000–7,500 distinct order IDs). |
+| `order_id` | `STRING` | `^ORD_[0-9]{6}$` | No | Grouping key for orders (exactly 7,200 distinct order IDs). |
 | `customer_id` | `STRING` | FK $\rightarrow$ `customers` | Yes | Valid foreign key for 9,900 rows. Exactly 100 rows contain intentional `""`. |
 | `order_date` | `STRING` | ISO-8601 `YYYY-MM-DD` | No | Bounded within `[ref_date - 180 days, ref_date]`. Strictly non-null. |
 | `product_id` | `STRING` | FK $\rightarrow$ `inventory` | No | 100% referential integrity (all 10,000 rows match valid `product_id`s in `inventory.csv`). |

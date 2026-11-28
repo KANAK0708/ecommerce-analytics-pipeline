@@ -30,6 +30,7 @@ from typing import Dict, List, Optional, Sequence
 
 from src.etl.gold_aggregate import run_gold
 from src.etl.silver_clean import DEFAULT_REFERENCE_DATE, run_silver
+from src.utils.paths import ensure_no_overlap
 from src.utils.spark_session import get_spark_session, stop_spark_session
 
 logger = logging.getLogger("pipeline")
@@ -67,11 +68,12 @@ def run_pipeline(
     raw_dir, output_dir = Path(raw_dir), Path(output_dir)
     if not raw_dir.is_dir():
         raise FileNotFoundError(f"Raw input directory not found: {raw_dir}")
-    if output_dir.resolve() == raw_dir.resolve():
-        raise ValueError("output_dir must differ from raw_dir so Bronze files are never overwritten")
-
     silver_dir, gold_dir = output_dir / "silver", output_dir / "gold"
-    run_ts = datetime.now(timezone.utc).replace(tzinfo=None, microsecond=0)
+    # Validate before any write: the folders Spark overwrites must not be, contain,
+    # or sit inside the raw folder (canonicalized, so ../ and symlinks can't sneak past).
+    ensure_no_overlap(raw_dir, silver_dir, "raw directory", "Silver directory")
+    ensure_no_overlap(raw_dir, gold_dir, "raw directory", "Gold directory")
+    run_ts = datetime.now(timezone.utc).replace(microsecond=0)
 
     spark = get_spark_session("EcommerceLocalPipeline", master=master, shuffle_partitions=8)
     summary = PipelineSummary()

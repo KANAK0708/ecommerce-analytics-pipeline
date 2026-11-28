@@ -47,7 +47,9 @@ from typing import Dict, List, Optional, Sequence
 
 from pyspark.sql import Column, DataFrame, SparkSession, Window
 from pyspark.sql import functions as F
-from pyspark.sql.types import DecimalType, TimestampType
+from pyspark.sql.types import DecimalType, StringType, StructField, StructType
+
+from src.utils.paths import ensure_no_overlap
 
 logger = logging.getLogger(__name__)
 
@@ -80,9 +82,12 @@ UNIT_PRICE_TYPE = DecimalType(10, 2)  # approved financial precision for unit pr
 REJECTION_REASON_COL = "rejection_reason"
 REJECTED_AT_COL = "rejected_at"
 _ROW_ID = "_source_row_id"  # internal: preserves file order for deterministic dedup
+_CORRUPT_COL = "_corrupt_record"  # internal: raw line of a row with the wrong field count
 
 ISO_DATE_REGEX = r"^\d{4}-\d{2}-\d{2}$"
 INT_REGEX = r"^-?\d+$"
+DECIMAL_REGEX = r"^-?\d+(\.\d+)?$"  # any plain decimal number
+PRICE_PRECISION_REGEX = r"^-?\d+(\.\d{1,2})?$"  # at most two decimal places
 
 
 @dataclass
@@ -111,27 +116,53 @@ def read_raw_csv(spark: SparkSession, path: str | Path, expected_columns: Sequen
     Why strings: if Spark inferred types, a value like "abc" in an INT column would
     become NULL silently. Reading strings lets *us* decide what is invalid.
 
+    Row-width check (QA fix 2): by default Spark pads a short row with NULLs and
+    silently drops the extra tokens of a long row. We read with an extra
+    ``_corrupt_record`` column, which Spark fills with the raw line whenever a row
+    has too few or too many fields. Such a row cannot be mapped safely onto the
+    contract columns, so it cannot be quarantined faithfully: the whole batch fails
+    here, before any Silver or Gold output is written. The Bronze file is only read.
+
     Raises:
         FileNotFoundError: the file does not exist.
-        ValueError: the header does not match the approved contract exactly.
+        ValueError: the header does not match the contract, or a row has the wrong
+            number of fields.
     """
     path = Path(path)
     if not path.is_file():
         raise FileNotFoundError(f"Raw input file not found: {path}")
 
+    header = spark.read.option("header", True).option("inferSchema", False).csv(str(path)).columns
+    if header != list(expected_columns):
+        raise ValueError(f"Header mismatch in {path.name}: expected {list(expected_columns)}, got {header}")
+
+    schema = StructType(
+        [StructField(c, StringType(), True) for c in expected_columns]
+        + [StructField(_CORRUPT_COL, StringType(), True)]
+    )
     df = (
         spark.read.option("header", True)
-        .option("inferSchema", False)
         .option("mode", "PERMISSIVE")
+        .option("columnNameOfCorruptRecord", _CORRUPT_COL)
+        .schema(schema)
         .csv(str(path))
+        # Spark refuses queries that reference only the corrupt-record column of an
+        # uncached CSV scan, so cache before checking it.
+        .cache()
     )
-    if df.columns != list(expected_columns):
+    malformed = df.filter(F.col(_CORRUPT_COL).isNotNull())
+    bad_count = malformed.count()
+    if bad_count:
+        examples = [r[_CORRUPT_COL] for r in malformed.select(_CORRUPT_COL).limit(5).collect()]
+        df.unpersist()
         raise ValueError(
-            f"Header mismatch in {path.name}: expected {list(expected_columns)}, got {df.columns}"
+            f"{path.name}: {bad_count} row(s) have the wrong number of fields "
+            f"(expected {len(expected_columns)}). Batch aborted before any output was written. "
+            f"Examples: {examples}"
         )
     # monotonically_increasing_id() grows with file position (partition id is the
     # high bits), so ordering by it reproduces the original CSV row order.
-    return df.withColumn(_ROW_ID, F.monotonically_increasing_id())
+    return df.select(*expected_columns).withColumn(_ROW_ID, F.monotonically_increasing_id())
 
 
 # ---------------------------------------------------------------------------
@@ -160,9 +191,18 @@ def _parse_int(col_name: str) -> Column:
     return F.when(c.rlike(INT_REGEX), F.expr(f"try_cast(trim(`{col_name}`) AS INT)"))
 
 
-def _parse_decimal(col_name: str, dtype: DecimalType) -> Column:
-    """Parse a string straight to Decimal (never via float, so 161.44 stays exact)."""
-    return F.expr(f"try_cast(trim(`{col_name}`) AS DECIMAL({dtype.precision},{dtype.scale}))")
+def _parse_price(col_name: str, dtype: DecimalType) -> Column:
+    """Parse a price string straight to Decimal (never via float, so 161.44 stays exact).
+
+    Only values with at most two decimal places are parsed (QA fix 1): casting
+    "1.999" to DECIMAL(10,2) would silently round it to 2.00, so such values stay
+    NULL here and are rejected as ``excess_unit_price_precision`` instead.
+    """
+    c = F.trim(F.col(col_name))
+    return F.when(
+        c.rlike(PRICE_PRECISION_REGEX),
+        F.expr(f"try_cast(trim(`{col_name}`) AS DECIMAL({dtype.precision},{dtype.scale}))"),
+    )
 
 
 def _first_reason(rules: Sequence[tuple[Column, str]]) -> Column:
@@ -203,7 +243,7 @@ def _split(
         invalid.select(*raw_columns, _ROW_ID, REJECTION_REASON_COL)
         .unionByName(duplicates.select(*raw_columns, _ROW_ID, REJECTION_REASON_COL))
         .orderBy(_ROW_ID)
-        .withColumn(REJECTED_AT_COL, F.lit(rejected_at).cast(TimestampType()))
+        .withColumn(REJECTED_AT_COL, _timestamp_literal(rejected_at))
         .drop(_ROW_ID)
     )
     return silver, quarantine
@@ -240,12 +280,29 @@ def _validate_reference_date(reference_date: str) -> date:
 
 
 def _default_rejected_at(rejected_at: Optional[datetime]) -> datetime:
-    """One timestamp per run, in UTC, so every quarantined row of a run shares it."""
+    """Return one timezone-aware UTC timestamp per run (QA fix 4).
+
+    The timezone is kept on purpose: a naive datetime handed to Spark is interpreted
+    in the machine's local timezone, which shifted the stored instant on non-UTC
+    machines. A naive value passed by a caller is treated as UTC.
+    """
     if rejected_at is None:
-        return datetime.now(timezone.utc).replace(tzinfo=None, microsecond=0)
-    if rejected_at.tzinfo is not None:
-        rejected_at = rejected_at.astimezone(timezone.utc).replace(tzinfo=None)
-    return rejected_at
+        return datetime.now(timezone.utc).replace(microsecond=0)
+    if rejected_at.tzinfo is None:
+        return rejected_at.replace(tzinfo=timezone.utc)
+    return rejected_at.astimezone(timezone.utc)
+
+
+def _timestamp_literal(moment: datetime) -> Column:
+    """Spark TIMESTAMP literal for an exact instant, independent of any local timezone.
+
+    The instant is passed as integer microseconds since the Unix epoch, so neither
+    Python nor the JVM has to guess a timezone.
+    """
+    epoch = datetime(1970, 1, 1, tzinfo=timezone.utc)
+    delta = _default_rejected_at(moment) - epoch
+    micros = (delta.days * 86_400 + delta.seconds) * 1_000_000 + delta.microseconds
+    return F.expr(f"timestamp_micros({micros})")
 
 
 # ---------------------------------------------------------------------------
@@ -340,8 +397,9 @@ def clean_orders(raw: DataFrame, rejected_at: Optional[datetime] = None) -> Clea
     typed = (
         raw.withColumn("_order_date", _parse_date("order_date"))
         .withColumn("_quantity", _parse_int("quantity"))
-        .withColumn("_unit_price", _parse_decimal("unit_price", UNIT_PRICE_TYPE))
+        .withColumn("_unit_price", _parse_price("unit_price", UNIT_PRICE_TYPE))
     )
+    price_text = F.coalesce(F.trim(F.col("unit_price")), F.lit(""))
     typed = typed.withColumn(
         REJECTION_REASON_COL,
         _first_reason(
@@ -350,9 +408,14 @@ def clean_orders(raw: DataFrame, rejected_at: Optional[datetime] = None) -> Clea
                 (_is_blank("product_id"), "invalid_product_id"),
                 (F.col("_order_date").isNull(), "invalid_order_date"),
                 (F.col("_quantity").isNull(), "invalid_quantity"),
-                (F.col("_unit_price").isNull(), "invalid_unit_price"),
+                (~price_text.rlike(DECIMAL_REGEX), "invalid_unit_price"),
+                (~price_text.rlike(PRICE_PRECISION_REGEX), "excess_unit_price_precision"),
+                (F.col("_unit_price").isNull(), "invalid_unit_price"),  # e.g. overflows DECIMAL(10,2)
                 (_is_blank("customer_id"), "null_customer_id"),
+                # Contract: quantity and unit_price must be strictly positive.
                 (F.col("_quantity") < 0, "negative_quantity"),
+                (F.col("_quantity") == 0, "zero_quantity"),
+                (F.col("_unit_price") < 0, "negative_unit_price"),
                 (F.col("_unit_price") == 0, "zero_unit_price"),
             ]
         ),
@@ -395,8 +458,13 @@ def run_silver(
     Output layout:
       <silver_dir>/customers|inventory|orders/
       <silver_dir>/quarantine/customers|inventory|orders/
+
+    All three files are read, validated and reconciled before the first write, so a
+    malformed file (wrong header, wrong field count) or an unsafe output path
+    aborts the batch without publishing partial Silver output.
     """
     raw_dir, silver_dir = Path(raw_dir), Path(silver_dir)
+    ensure_no_overlap(raw_dir, silver_dir, "raw directory", "Silver directory")
     rejected_at = _default_rejected_at(rejected_at)
 
     results = {

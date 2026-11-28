@@ -36,3 +36,4 @@
   - Silver reconciliation: customers 1,010 = 985 + 25; inventory 300 = 294 + 6; orders 10,000 = 9,700 + 300.
   - Gold: 294 inventory rows, 985 customer rows, total revenue $5,016,285.01 over 7,044 distinct orders.
   - Known difference: customer metrics total $4,928,268.48 ($88,016.53 belongs to the 15 quarantined customers; Option A).
+- **Codex QA fixes (2026-11-28)**: strict quantity/price validation, CSV row-width check, output path overlap safety, UTC `rejected_at`. Regression tests in `tests/test_qa_regressions.py`. One pipeline run on Bronze data reproduced all counts and Gold totals above; Bronze SHA-256 hashes unchanged.

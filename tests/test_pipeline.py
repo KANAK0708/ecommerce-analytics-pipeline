@@ -22,7 +22,7 @@ def test_missing_raw_dir_returns_error_code(spark, tmp_path):
 
 
 def test_output_dir_cannot_be_raw_dir(spark, tmp_path):
-    with pytest.raises(ValueError, match="must differ"):
+    with pytest.raises(ValueError, match="Unsafe output path"):
         pipeline.run_pipeline(tmp_path, tmp_path)
 
 

@@ -108,7 +108,9 @@ def test_quarantine_keeps_original_columns_plus_audit_fields(spark, tmp_path):
     row = result.quarantine.first()
     # The raw string value is preserved exactly, not the parsed date.
     assert row["signup_date"] == "2026-12-01"
-    assert row["rejected_at"] == RUN_TS
+    assert result.quarantine.selectExpr("unix_seconds(rejected_at)").first()[0] == int(
+        RUN_TS.replace(tzinfo=dt.timezone.utc).timestamp()
+    )
 
 
 def test_dedup_is_deterministic_keeps_first_occurrence(spark, tmp_path):

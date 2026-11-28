@@ -45,3 +45,9 @@
 - **gold_inventory_health** follows the Athena DDL column list (includes `reorder_threshold`).
 - **gold_customer_metrics base (Option A)**: only Silver customers (985), left-joined to their orders; zero-order customers are kept with 0.00 spend, 0 orders, tier Low. Known, explained difference: the 15 quarantined customers have 175 valid Silver order lines (132 orders, $88,016.53), which count in `gold_daily_sales` ($5,016,285.01 total) but not in `gold_customer_metrics` ($4,928,268.48 total).
 - **Idempotency**: all Silver/Gold outputs are written with overwrite mode; no partitioning at the current data volume.
+
+### 7.1 Phase 2 QA fixes (Codex review, approved by Project Owner 2026-11-28)
+- Orders: `quantity <= 0` and `unit_price <= 0` are quarantined (`negative_quantity`, `zero_quantity`, `negative_unit_price`, `zero_unit_price`); prices with more than two decimal places are quarantined as `excess_unit_price_precision` before casting (no silent rounding).
+- CSV rows with extra or missing fields cannot be mapped safely onto contract columns, so they abort the batch before any Silver or Gold output is written. Bronze files are only read.
+- Raw and output paths are canonicalized (absolute, `..` and symlinks resolved, case-normalized); Silver/Gold write folders that equal, contain or sit inside the raw folder are rejected before any write. Gold may not overlap Silver.
+- `rejected_at` is a timezone-aware UTC instant passed to Spark as epoch microseconds, so the stored value does not depend on the machine's local timezone.

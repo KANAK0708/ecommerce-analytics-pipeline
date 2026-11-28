@@ -36,6 +36,8 @@ from pyspark.sql import Column, DataFrame, SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import DecimalType, DoubleType, IntegerType, LongType
 
+from src.utils.paths import ensure_no_overlap
+
 logger = logging.getLogger(__name__)
 
 LINE_REVENUE_TYPE = DecimalType(12, 2)
@@ -203,6 +205,7 @@ def run_gold(spark: SparkSession, silver_dir: str | Path, gold_dir: str | Path) 
     Each table is written with mode("overwrite") so reruns replace, never append.
     """
     silver_dir, gold_dir = Path(silver_dir), Path(gold_dir)
+    ensure_no_overlap(silver_dir, gold_dir, "Silver directory", "Gold directory")
     for name in ("customers", "inventory", "orders"):
         if not (silver_dir / name).exists():
             raise FileNotFoundError(f"Silver input not found: {silver_dir / name}. Run the Silver stage first.")

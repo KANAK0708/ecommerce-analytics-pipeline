@@ -49,7 +49,7 @@ from pyspark.sql import Column, DataFrame, SparkSession, Window
 from pyspark.sql import functions as F
 from pyspark.sql.types import DecimalType, StringType, StructField, StructType
 
-from src.utils.paths import ensure_no_overlap
+from src.utils.paths import ensure_no_overlap, validate_write_destinations
 
 logger = logging.getLogger(__name__)
 
@@ -446,6 +446,15 @@ def write_parquet(df: DataFrame, path: str | Path) -> None:
     df.write.mode("overwrite").parquet(str(path))
 
 
+SILVER_TABLES = ("customers", "inventory", "orders")
+
+
+def silver_write_destinations(silver_dir: str | Path) -> List[Path]:
+    """Every folder run_silver overwrites (Silver tables and their quarantine)."""
+    silver_dir = Path(silver_dir)
+    return [silver_dir / t for t in SILVER_TABLES] + [silver_dir / "quarantine" / t for t in SILVER_TABLES]
+
+
 def run_silver(
     spark: SparkSession,
     raw_dir: str | Path,
@@ -465,6 +474,7 @@ def run_silver(
     """
     raw_dir, silver_dir = Path(raw_dir), Path(silver_dir)
     ensure_no_overlap(raw_dir, silver_dir, "raw directory", "Silver directory")
+    validate_write_destinations(raw_dir, silver_dir, silver_write_destinations(silver_dir), "raw directory")
     rejected_at = _default_rejected_at(rejected_at)
 
     results = {

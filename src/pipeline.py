@@ -28,9 +28,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence
 
-from src.etl.gold_aggregate import run_gold
-from src.etl.silver_clean import DEFAULT_REFERENCE_DATE, run_silver
-from src.utils.paths import ensure_no_overlap
+from src.etl.gold_aggregate import gold_write_destinations, run_gold
+from src.etl.silver_clean import DEFAULT_REFERENCE_DATE, run_silver, silver_write_destinations
+from src.utils.paths import ensure_no_overlap, validate_write_destinations
 from src.utils.spark_session import get_spark_session, stop_spark_session
 
 logger = logging.getLogger("pipeline")
@@ -73,6 +73,13 @@ def run_pipeline(
     # or sit inside the raw folder (canonicalized, so ../ and symlinks can't sneak past).
     ensure_no_overlap(raw_dir, silver_dir, "raw directory", "Silver directory")
     ensure_no_overlap(raw_dir, gold_dir, "raw directory", "Gold directory")
+    # Every actual write destination, resolved through junctions/symlinks, before Spark starts.
+    validate_write_destinations(
+        raw_dir,
+        output_dir,
+        silver_write_destinations(silver_dir) + gold_write_destinations(gold_dir),
+        "raw directory",
+    )
     run_ts = datetime.now(timezone.utc).replace(microsecond=0)
 
     spark = get_spark_session("EcommerceLocalPipeline", master=master, shuffle_partitions=8)

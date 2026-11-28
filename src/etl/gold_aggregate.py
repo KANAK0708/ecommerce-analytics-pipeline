@@ -36,7 +36,14 @@ from pyspark.sql import Column, DataFrame, SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql.types import DecimalType, DoubleType, IntegerType, LongType
 
-from src.utils.paths import ensure_no_overlap
+from src.utils.paths import ensure_no_overlap, validate_write_destinations
+
+GOLD_TABLES = ("gold_daily_sales", "gold_inventory_health", "gold_customer_metrics")
+
+
+def gold_write_destinations(gold_dir: str | Path) -> list[Path]:
+    """Every folder run_gold overwrites."""
+    return [Path(gold_dir) / t for t in GOLD_TABLES]
 
 logger = logging.getLogger(__name__)
 
@@ -206,6 +213,7 @@ def run_gold(spark: SparkSession, silver_dir: str | Path, gold_dir: str | Path) 
     """
     silver_dir, gold_dir = Path(silver_dir), Path(gold_dir)
     ensure_no_overlap(silver_dir, gold_dir, "Silver directory", "Gold directory")
+    validate_write_destinations(silver_dir, gold_dir, gold_write_destinations(gold_dir), "Silver directory")
     for name in ("customers", "inventory", "orders"):
         if not (silver_dir / name).exists():
             raise FileNotFoundError(f"Silver input not found: {silver_dir / name}. Run the Silver stage first.")

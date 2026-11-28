@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import datetime as dt
+import os
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -10,7 +12,7 @@ import pytest
 from src import pipeline
 from src.etl import gold_aggregate as ga
 from src.etl import silver_clean as sc
-from src.utils.paths import ensure_no_overlap, paths_overlap
+from src.utils.paths import ensure_no_overlap, is_link_or_reparse_point, paths_overlap
 
 HEADER = ",".join(sc.ORDER_COLUMNS)
 
@@ -123,6 +125,50 @@ def test_fix3_silver_and_gold_stages_check_paths(spark, tmp_path):
         ga.run_gold(spark, tmp_path / "silver", tmp_path / "silver" / "gold")
     with pytest.raises(ValueError, match="Unsafe output path"):
         ensure_no_overlap(tmp_path / "a" / "b", tmp_path / "a", "raw", "out")
+
+
+def _make_junction(link: Path, target: Path) -> None:
+    link.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["cmd", "/c", "mklink", "/J", str(link), str(target)], check=True, capture_output=True)
+
+
+def _snapshot(folder: Path) -> dict[str, bytes]:
+    return {str(p.relative_to(folder)): p.read_bytes() for p in folder.rglob("*") if p.is_file()}
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows junction regression")
+@pytest.mark.parametrize("junction_rel", ["silver/quarantine", "silver/orders", "gold"])
+def test_fix3_junction_below_output_root_rejected_before_write(spark, tmp_path, junction_rel):
+    # A throwaway Bronze copy: the real data/raw files are never involved.
+    raw = tmp_path / "raw"
+    _write(raw / "orders.csv", [HEADER, "ORD_100001,CUST_10001,2026-05-01,PROD_1001,1,9.99"])
+    before = _snapshot(raw)
+    out = tmp_path / "out"
+    link = out / junction_rel
+    _make_junction(link, raw)  # e.g. out/silver/quarantine -> raw
+    try:
+        with pytest.raises(ValueError, match="Unsafe output path"):
+            pipeline.run_pipeline(raw, out)
+        assert _snapshot(raw) == before  # Bronze untouched
+        written = [p for p in out.rglob("*") if p.is_file() and link not in p.parents]
+        assert written == []  # nothing published anywhere
+    finally:
+        os.rmdir(link)  # removes the junction only, never its target
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows junction regression")
+def test_fix3_junction_to_safe_folder_also_rejected(spark, tmp_path):
+    raw, elsewhere, out = tmp_path / "raw", tmp_path / "elsewhere", tmp_path / "out"
+    raw.mkdir()
+    elsewhere.mkdir()
+    link = out / "silver" / "quarantine"
+    _make_junction(link, elsewhere)
+    try:
+        assert is_link_or_reparse_point(link)
+        with pytest.raises(ValueError, match="junction or reparse point"):
+            sc.run_silver(spark, raw, out / "silver")
+    finally:
+        os.rmdir(link)
 
 
 # ---------------------------------------------------------------------------

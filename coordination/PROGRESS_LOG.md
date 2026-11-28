@@ -25,6 +25,14 @@
   - Phase 1 release pushed to GitHub remote `feature/phase1-generator` (commit `acbf5ea`), verified clean, and raw datasets excluded from Git.
 
 ## Phase 2: PySpark Medallion ETL & Local Automated Testing
-- **Status**: Planning (Implementation Plan Submitted for Human Approval)
+- **Status**: Implemented and pushed to `feature/phase2-pyspark-etl`; awaiting Codex review and human sign-off
 - **Planning Date**: 2026-11-26
+- **Rules Approved by Project Owner**: 2026-11-28 (see `docs/decisions.md` section 7)
+- **Implementation Date**: 2026-11-28 (`Claude Code`)
 - **Scope**: Silver cleaning (`src/etl/silver_clean.py`), Gold aggregations (`src/etl/gold_aggregate.py`), and Chispa tests (`tests/test_silver_clean.py`, `tests/test_gold_aggregate.py`).
+- **Verification Summary (2026-11-28)**:
+  - Full suite: 68 passed (34 Phase 1, 9 Spark session, 12 Silver, 9 Gold, 4 pipeline) on Windows, Python 3.11.9, PySpark 4.3.0, Java 17.
+  - Coverage of `src/`: 98% (`pytest tests --cov=src`).
+  - Silver reconciliation: customers 1,010 = 985 + 25; inventory 300 = 294 + 6; orders 10,000 = 9,700 + 300.
+  - Gold: 294 inventory rows, 985 customer rows, total revenue $5,016,285.01 over 7,044 distinct orders.
+  - Known difference: customer metrics total $4,928,268.48 ($88,016.53 belongs to the 15 quarantined customers; Option A).

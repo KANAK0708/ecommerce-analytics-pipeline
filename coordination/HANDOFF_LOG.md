@@ -24,3 +24,15 @@
   - Implement PySpark Silver cleaning module (`src/etl/silver_clean.py`).
   - Implement PySpark Gold aggregation module (`src/etl/gold_aggregate.py`).
   - Author Chispa DataFrame unit tests in `tests/test_silver_clean.py` and `tests/test_gold_aggregate.py`.
+
+## Phase 2 Implementation to Review Handoff
+- **Date**: 2026-11-28
+- **Sender**: `Claude Code`
+- **Receiver**: `Codex` (independent review), Project Owner (sign-off)
+- **Branch**: `feature/phase2-pyspark-etl` (not merged into `main`)
+- **Artifacts**:
+  - `src/utils/spark_session.py`, `src/etl/silver_clean.py`, `src/etl/gold_aggregate.py`, `src/pipeline.py`
+  - `tests/conftest.py`, `tests/test_spark_session.py`, `tests/test_silver_clean.py`, `tests/test_gold_aggregate.py`, `tests/test_pipeline.py`
+- **Run locally**: `.\.venv\Scripts\python.exe -m src.pipeline` (writes `data/silver/` and `data/gold/`, both git-ignored)
+- **Approved rules**: `docs/decisions.md` section 7
+- **Out of scope / not done**: no AWS integration; Athena DDL unchanged.

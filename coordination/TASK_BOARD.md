@@ -1,9 +1,8 @@
 # Project Task Board
 
-## Backlog (Phase 2: PySpark Medallion ETL Ready to Start)
-- [ ] TASK-2.1: Implement PySpark Silver cleaning transformation (`src/etl/silver_clean.py`)
-- [ ] TASK-2.2: Implement PySpark Gold KPI aggregations (`src/etl/gold_aggregate.py`)
-- [ ] TASK-2.3: Implement Chispa tests for Silver & Gold (`tests/`)
+## Backlog (Phase 2)
+- [ ] TASK-2.5: Independent Codex review of `feature/phase2-pyspark-etl` (`Codex`)
+- [ ] TASK-2.6: Phase 2 human sign-off (`Human`)
 
 ## Backlog (Phases 3–5)
 - [ ] TASK-3.1: Provision AWS S3 bucket structure and verify IAM permissions
@@ -15,7 +14,14 @@
 - [ ] TASK-5.3: Reconcile Power BI numbers with Athena SQL query output
 
 ## In Progress
-*(No tasks currently in progress — Awaiting human approval for Phase 2 Implementation Plan)*
+*(None. Phase 2 cleaning rules approved by Project Owner 2026-11-28; implementation pushed for review.)*
+
+## Done (Phase 2: PySpark Medallion ETL — awaiting review)
+- [x] TASK-2.0: Local Spark session utility (`src/utils/spark_session.py`) (`Claude Code`) — *Completed 2026-11-28*
+- [x] TASK-2.1: PySpark Silver cleaning with quarantine (`src/etl/silver_clean.py`) (`Claude Code`) — *Completed 2026-11-28*
+- [x] TASK-2.2: PySpark Gold KPI aggregations (`src/etl/gold_aggregate.py`) (`Claude Code`) — *Completed 2026-11-28*
+- [x] TASK-2.3: Chispa/pytest tests for Spark, Silver, Gold and pipeline (`tests/`) (`Claude Code`) — *Completed 2026-11-28*
+- [x] TASK-2.4: Local end-to-end runner (`src/pipeline.py`) (`Claude Code`) — *Completed 2026-11-28*
 
 ## Done (Phase 1: Local Development & Synthetic Data Engine)
 - [x] TASK-1.0: Local Python 3.11 Virtual Environment & Dependency Setup (`Human`) — *Completed 2026-11-23*
